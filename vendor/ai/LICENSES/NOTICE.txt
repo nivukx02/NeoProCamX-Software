@@ -1,0 +1,14 @@
+CamX Studio AI worker includes the Python runtime and open-source components.
+
+Google LiteRT 2.2.0 and FlatBuffers: Apache License 2.0
+NumPy 2.4.2: BSD-3-Clause and bundled component licenses
+ml_dtypes 0.6.0: Apache License 2.0 and Eigen MPL-2.0
+Protocol Buffers 7.36.1: BSD-3-Clause
+typing_extensions 4.16.0: PSF-2.0
+tqdm 4.70.0: MPL-2.0 and MIT
+colorama 0.4.6: BSD-3-Clause
+backports.strenum 1.2.8: MIT
+Python 3.14: Python Software Foundation License
+PyInstaller bootloader 6.22.2: GPL-2.0-or-later with bootloader exception
+
+The corresponding license texts are included in this directory.

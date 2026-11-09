@@ -1,0 +1,76 @@
+{
+  "name": "camx-studio",
+  "version": "1.6.0",
+  "description": "Professional AI-assisted desktop mastering and conversion for CamX",
+  "main": "src/main.js",
+  "author": "CamX",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test --test-concurrency=1 test/*.test.js",
+    "verify": "node scripts/verify.js",
+    "verify:matrix": "node scripts/verify-matrix.js",
+    "convert:headless": "node scripts/headless-convert.js",
+    "dist": "electron-builder --win nsis",
+    "dist:dir": "electron-builder --win dir"
+  },
+  "devDependencies": {
+    "electron": "44.1.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.neoproc.camx.studio",
+    "productName": "CamX Studio",
+    "artifactName": "CamX-Studio-${version}-${arch}.${ext}",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.ico",
+      "scripts/portable-device.ps1",
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor/ffmpeg",
+        "to": "ffmpeg",
+        "filter": ["ffmpeg.exe", "ffprobe.exe", "LICENSE", "README.txt"]
+      },
+      {
+        "from": "scripts/portable-device.ps1",
+        "to": "portable-device.ps1"
+      },
+      {
+        "from": "scripts/CamxMtpStream.cs",
+        "to": "CamxMtpStream.cs"
+      },
+      {
+        "from": "vendor/android-platform-tools",
+        "to": "android-platform-tools",
+        "filter": ["adb.exe", "AdbWinApi.dll", "AdbWinUsbApi.dll", "NOTICE.txt", "source.properties"]
+      },
+      {
+        "from": "vendor/ai",
+        "to": "ai",
+        "filter": ["camx-ai.exe", "models/**/*", "README.txt", "LICENSES/**/*"]
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": ["nsis"],
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CamX Studio"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+
+# Build outputs and dependencies
+.gradle/
+**/.gradle/
+**/build/
+**/node_modules/
+**/.cxx/
+**/dist/
+**/output/
+.codex-artifacts/
+
+# Local diagnostics and recordings
+*.log
+*.pftrace
+*.perf.data
+*.mp4
+*.mov
+
+# Local Git backups
+.git-backup-*/
+.gitattributes.lfs-backup
+
+# Generated build and diagnostic artifacts
+.ai-build/
+.ai-dev/
+node_modules/
+**/node_modules/
+.cache/
+**/.cache/
+tmp/
+verification-output/
+matrix-verification-output/
+android-qa-evidence-*/
+desktop-qa-evidence-*/
+package-audit-*/
+
+# Local logs and performance traces
+*.log
+*.pftrace
+*.perf.data
+
+# Local Git backups
+.git-backup-*/
+.gitattributes.lfs-backup
+
+# Generated package audit snapshots
+.package-audit-v*/

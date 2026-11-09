@@ -1,0 +1,98 @@
+
+# Build outputs and dependencies
+.gradle/
+**/.gradle/
+**/build/
+**/node_modules/
+**/.cxx/
+**/dist/
+**/output/
+.codex-artifacts/
+
+# Local diagnostics and recordings
+*.log
+*.pftrace
+*.perf.data
+*.mp4
+*.mov
+
+# Local Git backups
+.git-backup-*/
+.gitattributes.lfs-backup
+
+# Generated build and diagnostic artifacts
+.ai-build/
+.ai-dev/
+node_modules/
+**/node_modules/
+.cache/
+**/.cache/
+tmp/
+verification-output/
+matrix-verification-output/
+android-qa-evidence-*/
+desktop-qa-evidence-*/
+package-audit-*/
+
+# Local logs and performance traces
+*.log
+*.pftrace
+*.perf.data
+
+# Local Git backups
+.git-backup-*/
+.gitattributes.lfs-backup
+
+# Generated package audit snapshots
+.package-audit-v*/
+
+# Dependencies and generated builds
+node_modules/
+**/node_modules/
+dist/
+out/
+build/
+coverage/
+.cache/
+.codex-artifacts/
+
+# Temporary and diagnostic data
+tmp/
+temp/
+*.log
+*.log.old
+*.pftrace
+*.perf.data
+*.mp4
+*.mov
+
+# Generated audit copies
+.package-audit-v*/
+**/.package-audit-v*/
+
+# Generated test evidence and reports
+android-qa-evidence-*/
+desktop-anr-evidence-*/
+matrix-verification-output/
+verification-output/
+.ai-build/
+.ai-dev/
+
+# Local application profiling data
+.profile-smoke/
+
+# Generated package audit snapshots
+/.package-audit-v*/
+
+# Generated diagnostic evidence
+/android-qa-evidence-*/
+/desktop-anr-evidence-*/
+/matrix-verification-output/
+/verification-output/
+/.profile-smoke/
+
+# Temporary build output
+/tmp/
+**/node_modules/
+**/dist/
+**/out/

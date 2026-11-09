@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' file: blob:; font-src 'self'; connect-src 'none'">
+  <title>CamX Studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="titlebar">
+    <div class="titlebar-leading">
+      <div class="wordmark" aria-label="CamX Studio">
+        <span class="brand-mark" aria-hidden="true"><i></i></span>
+        <span class="brand-name">CamX Studio</span>
+      </div>
+      <nav class="title-nav" aria-label="Workspace navigation">
+        <button class="nav-item active" data-view="workspace" aria-current="page"><span>Phone</span><span id="phoneBadge" class="nav-badge hidden">0</span></button>
+        <button id="previewNav" class="nav-item" data-view="preview"><span>Preview</span></button>
+        <button class="nav-item" data-view="queue"><span>Activity</span><span id="queueBadge" class="nav-badge hidden">0</span></button>
+      </nav>
+    </div>
+    <div class="title-actions">
+      <button id="titleRenderButton" class="title-render-button" disabled title="Configure render"><span class="render-spark" aria-hidden="true"></span><span>Render</span></button>
+      <button id="guideButton" class="title-guide-button" title="Learn CamX Studio" aria-label="How to use CamX Studio"><span aria-hidden="true">?</span><b>How to use</b></button>
+      <button id="aboutButton" class="title-icon-button" title="System details" aria-label="System details">i</button>
+      <div class="title-status"><span id="titleDot" class="status-dot"></span><span id="titleStatus">Checking engines</span></div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <main>
+      <section id="workspaceView" class="view active">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">CAMERA LIBRARY + DESKTOP MASTERING</p>
+            <h1>Phone</h1>
+            <p class="lede">Connect CamX, review verified cinema-pipeline clips, and render high-bit-depth masters from one workspace.</p>
+          </div>
+          <div class="hardware-readout">
+            <div><span>CPU</span><strong id="cpuReadout">-</strong></div>
+            <div><span>GPU</span><strong id="gpuReadout">-</strong></div>
+          </div>
+        </header>
+
+        <div class="workspace-grid source-workspace-grid">
+          <div class="source-column">
+            <section id="dropZone" class="drop-zone" tabindex="0">
+              <div class="drop-symbol" aria-hidden="true"><span></span><span></span></div>
+              <div><strong>Add videos</strong><p>Drop files here or import from a connected phone.</p></div>
+              <div class="drop-actions">
+                <button id="addFilesButton" class="button secondary">Browse</button>
+                <button id="openPhoneButton" class="button ghost">Scan phone</button>
+              </div>
+            </section>
+
+            <section class="panel source-panel">
+              <div class="panel-heading">
+                <div><span class="section-index">01</span><h2>Source videos</h2></div>
+                <div class="heading-actions"><span id="sourceSummary">No media loaded</span><button id="clearSourcesButton" class="icon-button" title="Clear source list" aria-label="Clear source list">&times;</button></div>
+              </div>
+              <div class="media-table-header"><span>Clip</span><span>Type</span><span>Image</span><span>Length</span><span></span></div>
+              <div id="sourceList" class="source-list empty">
+                <div class="empty-state"><span>NO SOURCES</span><p>Add a video to begin.</p></div>
+              </div>
+            </section>
+
+            <section id="phonePanel" class="panel phone-panel embedded-phone-panel">
+              <div class="panel-heading phone-heading">
+                <div><span class="section-index">USB</span><h2 id="phoneStatus">Waiting for a phone</h2></div>
+                <div class="phone-header-actions">
+                  <div id="phoneConnection" class="connection-chip waiting"><span aria-hidden="true"></span><strong id="phoneConnectionText">Watching for USB</strong></div>
+                  <button id="scanPhoneButton" class="button ghost">Refresh</button>
+                </div>
+              </div>
+              <div class="phone-filter-bar">
+                <span>CAMX PIPELINE MEDIA</span>
+                <div class="filter-tabs" role="group" aria-label="Phone video category">
+                  <button class="phone-filter active" data-phone-filter="conversion">Conversion videos <b id="phoneConversionCount">0</b></button>
+                  <button class="phone-filter" data-phone-filter="saved">Saved videos <b id="phoneSavedCount">0</b></button>
+                </div>
+              </div>
+              <div class="media-table-header phone-columns"><span></span><span>Video</span><span>Category</span><span>Size</span></div>
+              <div id="phoneList" class="phone-list empty"><div class="empty-state"><span>CONNECT A PHONE</span><p>Unlock CamX and select File transfer / Android Auto. Only CamX pipeline media is shown.</p></div></div>
+              <div class="phone-footer"><span id="phoneSelection">Select videos to download</span><button id="importPhoneButton" class="button primary small" disabled>Download to library</button></div>
+            </section>
+
+          </div>
+
+          <div id="renderBackdrop" class="render-backdrop hidden"></div>
+          <aside id="renderWizard" class="inspector studio-inspector render-drawer hidden" role="dialog" aria-modal="true" aria-labelledby="renderWizardTitle">
+            <div class="panel-heading inspector-heading">
+              <div><span class="section-index">R</span><h2 id="renderWizardTitle">Render</h2></div>
+              <div class="wizard-heading-actions"><span id="setupStepReadout" class="setup-step-readout">OUTPUT 1/3</span><button id="closeRenderButton" class="drawer-close" aria-label="Close render configuration">&times;</button></div>
+            </div>
+
+            <div class="setup-tabs" role="list" aria-label="Render workflow">
+              <div class="setup-tab active" role="listitem" aria-current="step" data-setup-step="output"><b>01</b><span>Output</span></div>
+              <div class="setup-tab" role="listitem" data-setup-step="processing"><b>02</b><span>Processing</span></div>
+              <div class="setup-tab" role="listitem" data-setup-step="render"><b>03</b><span>Render</span></div>
+            </div>
+
+            <section id="setupOutputPanel" class="setup-tab-panel active" role="tabpanel">
+              <fieldset class="control-group first-control">
+                <legend>OUTPUT FAMILY</legend>
+                <div id="modeControl" class="segment-control four mode-tabs">
+                  <label><input type="radio" name="mode" value="sdr" checked><span>SDR</span></label>
+                  <label><input type="radio" name="mode" value="hdr"><span>CAMX HDR</span></label>
+                  <label><input type="radio" name="mode" value="log"><span>NEOLOG</span></label>
+                  <label><input type="radio" name="mode" value="raw"><span>RAW</span></label>
+                </div>
+              </fieldset>
+
+              <div id="renderedSettings">
+                <fieldset class="control-group">
+                  <legend>DELIVERY TECHNOLOGY</legend>
+                  <div id="deliveryOptions" class="delivery-options" role="radiogroup" aria-label="Delivery technology"></div>
+                </fieldset>
+
+                <fieldset class="control-group">
+                  <legend>CHROMA CONTRACT</legend>
+                  <div class="segment-control three chroma-tabs">
+                    <label><input type="radio" name="chroma" value="444" checked><span><b>4:4:4</b><small>Pixel-lossless colour</small></span></label>
+                    <label><input type="radio" name="chroma" value="422"><span><b>4:2:2</b><small>Lossless sampled codes</small></span></label>
+                    <label><input type="radio" name="chroma" value="420"><span><b>4:2:0</b><small>Lossless sampled codes</small></span></label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="control-group">
+                  <legend>CODEC</legend>
+                  <div id="transportOptions" class="codec-options" role="radiogroup" aria-label="Codec and transport"></div>
+                  <p id="formatContract" class="contract-note"></p>
+                </fieldset>
+              </div>
+
+              <fieldset id="rawSettings" class="control-group hidden">
+                <legend>RAW IDENTITY OUTPUT</legend>
+                <div id="rawProfileOptions" class="profile-stack"></div>
+                <p class="control-note">Sensor samples remain untouched. Colour conversion, MFSR, AI and video encoding are bypassed.</p>
+              </fieldset>
+
+              <fieldset id="logVariantGroup" class="control-group hidden">
+                <legend>NEOLOG CURVE</legend>
+                <select id="logVariant">
+                  <option value="base">Base / neutral reference</option>
+                  <option value="shadow">Shadow / denser low end</option>
+                  <option value="highlight">Highlight / extended latitude</option>
+                  <option value="cinema">Cinema / soft roll-off</option>
+                </select>
+              </fieldset>
+
+              <div class="panel-navigation"><span>Choose the exact delivery contract.</span><button class="button next-button" data-setup-next="processing">Processing <b>&rarr;</b></button></div>
+            </section>
+
+            <section id="setupProcessingPanel" class="setup-tab-panel" role="tabpanel" hidden>
+              <div id="rawProcessingNotice" class="identity-lock hidden"><b>IDENTITY PIPELINE</b><strong>Processing is bypassed for RAW output</strong><span>No image operation can modify the sensor original.</span></div>
+
+              <div id="processingControls">
+                <fieldset id="mfsrGroup" class="control-group first-control">
+                  <legend>MULTI-FRAME RECONSTRUCTION</legend>
+                  <label class="switch-row feature-switch" for="mfsrToggle">
+                    <span><strong>Offline MFSR</strong><small id="mfsrStatus">Motion-aligned / ghost protected</small></span>
+                    <input id="mfsrToggle" type="checkbox" checked><i aria-hidden="true"></i>
+                  </label>
+                  <p class="control-note">Fuses 3–8 neighbouring frames at RGB48 precision with scene-cut and motion rejection. Enabled by default for every rendered mode.</p>
+                </fieldset>
+
+                <fieldset id="aiGroup" class="control-group">
+                  <legend>CAMERA INTELLIGENCE</legend>
+                  <label class="switch-row feature-switch" for="aiToggle">
+                    <span><strong>Detail-safe camera AI</strong><small id="aiStatus">Verified camera model</small></span>
+                    <input id="aiToggle" type="checkbox" checked><i aria-hidden="true"></i>
+                  </label>
+                  <p class="control-note">Bounded enhancement protects edges, highlights and temporal consistency.</p>
+                </fieldset>
+
+                <fieldset id="performanceGroup" class="control-group">
+                  <legend>QUALITY PROFILE</legend>
+                  <div class="quality-cards">
+                    <label><input type="radio" name="quality" value="maximum" checked><span><b>Maximum</b><small>8-frame / mastering</small></span></label>
+                    <label><input type="radio" name="quality" value="production"><span><b>Production</b><small>5-frame / balanced</small></span></label>
+                    <label><input type="radio" name="quality" value="accelerated"><span><b>Fast</b><small>3-frame / review</small></span></label>
+                  </div>
+                  <p id="qualityNote" class="control-note">8-frame offline MFSR, maximum precision and frequent AI analysis.</p>
+                </fieldset>
+              </div>
+
+              <div class="panel-navigation"><button class="text-button back-button" data-setup-next="output">&larr; Output</button><button class="button next-button" data-setup-next="render">Render <b>&rarr;</b></button></div>
+            </section>
+
+            <section id="setupRenderPanel" class="setup-tab-panel" role="tabpanel" hidden>
+              <fieldset id="executionGroup" class="control-group first-control">
+                <legend>RENDER ENGINE</legend>
+                <div class="engine-cards">
+                  <label><input type="radio" name="execution" value="gpu-auto" checked><span><i>AUTO</i><b>Maximum GPU</b><small id="gpuEngineDetail">Validated GPU processing, lossless encoder fallback</small></span></label>
+                  <label><input type="radio" name="execution" value="cpu-master"><span><i>CPU</i><b>Lossless CPU Encode</b><small>GPU image processing with a portable exact codec</small></span></label>
+                </div>
+                <p id="executionNote" class="control-note">Every validated GPU stage is used automatically. CPU takes only unavailable or unsupported work.</p>
+              </fieldset>
+
+              <section id="resourcePlan" class="resource-plan" aria-label="Processing resource plan">
+                <div class="resource-plan-head"><span>STAGE OWNERSHIP</span><b id="resourcePlanMode">GPU AUTO</b></div>
+                <div id="stagePlan" class="stage-plan"></div>
+                <p>Actual utilization is adaptive. The app never reports a fixed GPU or CPU percentage that the hardware cannot guarantee.</p>
+              </section>
+
+              <fieldset class="control-group">
+                <legend>SAVE LOCATION</legend>
+                <button id="outputButton" class="path-field"><span id="outputPath">Choosing default...</span><b>Change</b></button>
+              </fieldset>
+
+              <section class="render-summary" aria-label="Selected output summary">
+                <div class="render-summary-head"><span>SELECTED RENDER</span><b id="summaryCount">0 CLIPS</b></div>
+                <dl>
+                  <dt>Delivery</dt><dd id="summaryDelivery">Rec.709 SDR</dd>
+                  <dt>Format</dt><dd id="summaryFormat">FFV1 RGB / 4:4:4 / 16-bit</dd>
+                  <dt>Processing</dt><dd id="summaryProcessing">Maximum / MFSR / Camera AI</dd>
+                  <dt>Engine</dt><dd id="summaryEngine">Maximum GPU / exact CPU fallback</dd>
+                </dl>
+              </section>
+
+              <div id="conversionNotice" class="notice"><span>i</span><p>Originals are never overwritten. Every delivery includes a SHA-256 receipt.</p></div>
+              <button id="convertButton" class="button primary render-button" disabled><span>Start render</span><small id="convertCount">Add source media</small></button>
+              <div class="panel-navigation render-navigation"><button class="text-button back-button" data-setup-next="processing">&larr; Processing</button><span>Full decode validation is automatic.</span></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="previewView" class="view preview-view">
+        <header class="page-header compact-header">
+          <div><p class="eyebrow">SOURCE MONITOR</p><h1>Preview</h1><p class="lede">Inspect the selected source before rendering.</p></div>
+          <div class="preview-header-actions">
+            <button id="previewBackButton" class="button ghost">Back to media</button>
+            <button id="previewRenderButton" class="button secondary" disabled>Render selected</button>
+          </div>
+        </header>
+        <section class="preview-workspace panel">
+          <div class="preview-workspace-head">
+            <div><span class="monitor-live-dot"></span><strong id="previewTitle">No source selected</strong></div>
+            <span id="previewFormatBadge">SOURCE</span>
+          </div>
+          <div class="preview-canvas">
+            <div id="previewEmpty" class="preview-empty"><span class="preview-empty-mark"><i></i></span><strong>Select a source video</strong><p>Click a clip in Phone to prepare playback automatically.</p></div>
+            <div id="previewLoading" class="preview-loading hidden"><strong>Preparing playable preview</strong><span id="previewStatus">Starting...</span><progress id="previewProgress" max="100"></progress></div>
+            <video id="previewVideo" class="preview-video hidden" controls preload="metadata"></video>
+          </div>
+          <div class="preview-transport"><span id="previewMeta">No clip loaded</span><span>PLAYABLE BEFORE RENDER</span></div>
+        </section>
+      </section>
+
+      <section id="queueView" class="view">
+        <header class="page-header compact-header"><div><p class="eyebrow">PROCESSING</p><h1>Activity</h1><p class="lede">One master runs at a time so it receives the full available processing budget.</p></div></header>
+        <section class="panel queue-panel">
+          <div id="queueFull" class="queue-list"><div class="empty-state"><span>QUEUE EMPTY</span><p>Conversions will appear here.</p></div></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="systemDialog">
+    <div class="dialog-head"><div><p class="eyebrow">RUNTIME</p><h2>System details</h2></div><button id="closeSystemDialog" class="icon-button" aria-label="Close">&times;</button></div>
+    <dl id="systemDetails" class="system-details"></dl>
+  </dialog>
+
+  <dialog id="guideDialog" class="guide-dialog" aria-labelledby="guideTitle">
+    <div class="dialog-head guide-head">
+      <div><p class="eyebrow">CAMX STUDIO GUIDE</p><h2 id="guideTitle">How to use CamX Studio</h2><p>From phone connection to a verified final master.</p></div>
+      <button id="closeGuideDialog" class="icon-button" aria-label="Close guide">&times;</button>
+    </div>
+    <div class="guide-tabs" role="tablist" aria-label="Guide detail level">
+      <button id="guideQuickTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="guideQuickPanel" data-guide-tab="quick">Quick start</button>
+      <button id="guideDetailedTab" type="button" role="tab" aria-selected="false" aria-controls="guideDetailedPanel" data-guide-tab="detailed">Detailed guide</button>
+    </div>
+    <div class="guide-scroll">
+      <section id="guideQuickPanel" class="guide-panel active" role="tabpanel" aria-labelledby="guideQuickTab" data-guide-panel="quick">
+        <div class="guide-callout"><b>THE SIMPLE WORKFLOW</b><strong>Connect. Preview. Choose. Render. Verify.</strong><span>Your original is never overwritten.</span></div>
+        <ol class="guide-steps">
+          <li><b>01</b><div><strong>Connect or add media</strong><p>Unlock the Android phone, select File transfer / Android Auto, then wait for automatic CamX scanning. You can also drag a supported clip into the window or choose Browse.</p></div></li>
+          <li><b>02</b><div><strong>Select a CamX clip</strong><p>Conversion videos are verified Cinema Cam masters and can be rendered. Saved videos can be downloaded and previewed, but are intentionally locked against another conversion.</p></div></li>
+          <li><b>03</b><div><strong>Review before conversion</strong><p>The selected clip opens in Preview automatically. Play the complete source and inspect framing, motion, audio and duration.</p></div></li>
+          <li><b>04</b><div><strong>Open Render</strong><p>Choose Render in the title bar or right-click the source and choose Render this video.</p></div></li>
+          <li><b>05</b><div><strong>Complete the three render steps</strong><p>Choose Output, then Processing, then Render. Maximum quality, Offline MFSR, Camera AI and Maximum GPU are the defaults when supported.</p></div></li>
+          <li><b>06</b><div><strong>Start and monitor</strong><p>Choose the save location and start the render. Activity shows the current stage, processed frames, FPS, elapsed time and remaining time.</p></div></li>
+          <li><b>07</b><div><strong>Use the verified result</strong><p>The output is fully decoded and checked before publication. Keep the JSON receipt and any LUT or quality-evidence companion beside the master.</p></div></li>
+        </ol>
+      </section>
+
+      <section id="guideDetailedPanel" class="guide-panel" role="tabpanel" aria-labelledby="guideDetailedTab" data-guide-panel="detailed" hidden>
+        <article class="guide-section">
+          <span class="guide-section-number">01</span><div><h3>Prepare the phone</h3><p>Record with the CamX cinema pipeline. Connect the unlocked phone by a data-capable USB cable and choose File transfer / Android Auto on Android. The Phone workspace refreshes automatically every five seconds. If it remains empty, reconnect the cable, keep the phone unlocked and choose Refresh.</p><p>Only CamX, NeoProCamX and CamXNPV10 pipeline locations and validated companions are accepted. Ordinary phone videos are intentionally excluded.</p></div>
+        </article>
+        <article class="guide-section">
+          <span class="guide-section-number">02</span><div><h3>Import and inspect</h3><p>Select Conversion videos or Saved videos, tick one or more clips and choose Download to library. Downloaded clips stay in the same Source videos list with an IN LIBRARY marker. Saved videos remain preview-only; only Cinema Cam masters enable Render.</p></div>
+        </article>
+        <article class="guide-section">
+          <span class="guide-section-number">03</span><div><h3>Choose the output contract</h3><div class="guide-choice-grid"><div><b>SDR</b><span>Rec.709 SDR. An SDR source is restricted to this SDR-to-SDR route.</span></div><div><b>CAMX HDR</b><span>RAW to proprietary NDR10+ at 5,000 nits or NIVUKX Vision at 10,000 nits using the locked camera delivery math.</span></div><div><b>NEOLOG</b><span>RAW to scene-referred Base, Shadow, Highlight or Cinema with a verified viewing LUT.</span></div><div><b>RAW</b><span>Bit-exact RAW Preserve or identity-mosaic CinemaDNG. All image processing is bypassed.</span></div></div><p>Next choose 4:4:4 RGB pixel-lossless, uncompressed 4:2:2, or codec-lossless 4:2:0. Chroma subsampling is not reversible; CamX Studio states that scope explicitly and never changes the selection silently.</p></div>
+        </article>
+        <article class="guide-section">
+          <span class="guide-section-number">04</span><div><h3>Choose processing</h3><p><strong>Maximum</strong> uses the full 8-frame Offline MFSR plan and most frequent bounded AI analysis. <strong>Production</strong> uses five frames. <strong>Fast</strong> uses three frames for review work. MFSR rejects uncertain motion and resets at scene cuts; Camera AI is limited by edge, highlight and temporal guards.</p><p>RAW identity outputs hide these controls because any enhancement would violate sensor identity.</p></div>
+        </article>
+        <article class="guide-section">
+          <span class="guide-section-number">05</span><div><h3>Understand Maximum GPU</h3><p>Automatic mode sends every parity-validated MFSR, NIV99, AI and NDR/NIVUKX stage to the fastest compatible GPU path. NVIDIA, AMD and Intel adapters are supported through WebGPU and DirectML. Lossless 4:2:0 uses NVENC only after an encode/decode SHA-256 equality test; otherwise exact FFV1 is selected.</p><p>FFV1/r210/v210 packing, RAW unpack/develop, global registration, file I/O and final validation can remain CPU-owned. GPU percentage depends on the hardware and selected transport; the Stage ownership panel reports the real plan without claiming a fixed percentage.</p></div>
+        </article>
+        <article class="guide-section">
+          <span class="guide-section-number">06</span><div><h3>Render and verify</h3><p>Choose a destination, review Selected render and start. Activity reports live FPS and ETA. The source is hashed before and after conversion, the output is fully decoded, and exact codec, chroma, precision, colour signaling, frame timing and audio are validated before the final file is published.</p></div>
+        </article>
+        <article class="guide-section guide-troubleshooting">
+          <span class="guide-section-number">07</span><div><h3>Fast troubleshooting</h3><ul><li><strong>Phone not visible:</strong> unlock it, select file-transfer mode, use a data cable and choose Refresh.</li><li><strong>Render is dim:</strong> select a supported source and wait for engine checks to show Ready.</li><li><strong>GPU encode uses CPU:</strong> the chosen codec or chroma has no quality-safe hardware encoder; GPU image processing still runs when available.</li><li><strong>Conversion fails:</strong> read the Activity error. Partial outputs are removed automatically and the original stays untouched.</li></ul></div>
+        </article>
+        <article class="guide-section guide-shortcuts">
+          <span class="guide-section-number">08</span><div><h3>Optional keyboard workflow</h3><p>Open media: Ctrl+O &nbsp; Render: Ctrl+R &nbsp; Phone/Preview/Activity: Ctrl+1/2/3 &nbsp; Play: Space &nbsp; Start render: Ctrl+Enter &nbsp; Help: F1.</p></div>
+        </article>
+      </section>
+    </div>
+    <footer class="guide-footer"><span>Need hardware details? Open the information button beside How to use.</span><button id="guideStartButton" class="button primary" type="button">Start in Phone</button></footer>
+  </dialog>
+
+  <div id="sourceContextMenu" class="context-menu hidden" role="menu" aria-label="Source actions">
+    <button type="button" role="menuitem" data-context-action="preview"><span>Open in Preview</span></button>
+    <button type="button" role="menuitem" data-context-action="render"><span>Render this video</span></button>
+    <button type="button" role="menuitem" data-context-action="remove"><span>Remove from list</span></button>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
